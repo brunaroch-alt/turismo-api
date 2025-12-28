@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.getenv('API_KEY')
+API_KEY = os.getenv('API_KEY_TURISMO')
 if not API_KEY:
-    raise RuntimeError('ERRO: A variável de ambiente API_KEY não foi definida!')
+    raise RuntimeError('ERRO: A variável de ambiente API_KEY_TURISMO não foi definida!')
 
 API_KEY_NAME = 'X-API-KEY'
 
