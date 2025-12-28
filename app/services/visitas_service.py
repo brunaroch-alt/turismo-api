@@ -158,6 +158,8 @@ class VisitaService:
             
             db.commit()
             db.refresh(visita_existente)
+
+            visita_existente.total_arrecadado = visita_existente.valor_taxa_guia + visita_existente.total_produtos
             
             return visita_existente
         except HTTPException as error:

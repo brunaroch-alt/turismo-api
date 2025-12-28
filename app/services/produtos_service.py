@@ -55,6 +55,7 @@ class ProdutoService:
             produto_existente.nome = novos_dados.nome
             produto_existente.preco = novos_dados.preco
             produto_existente.categoria = novos_dados.categoria
+            produto_existente.ativo = novos_dados.ativo
             
             db.commit()
             db.refresh(produto_existente)

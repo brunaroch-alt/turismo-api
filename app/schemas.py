@@ -74,6 +74,7 @@ class ProdutoBase(BaseModel):
     categoria: str 
 
 class ProdutoCreate(ProdutoBase):
+    ativo: bool = True
     pass
 
 class ProdutoResponse(ProdutoBase):
