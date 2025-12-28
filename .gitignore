@@ -1,0 +1,22 @@
+# Ambiente virtual
+venv/
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Variáveis de ambiente
+.env
+
+# Banco de dados
+*.db
+
+# Alembic migrations
+alembic/versions/
+
+# IDEs e SO
+.vscode/
+.idea/
+.DS_Store

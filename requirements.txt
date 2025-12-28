@@ -1,0 +1,7 @@
+alembic==1.17.2
+dotenv==0.9.9
+fastapi==0.127.0
+pydantic==2.12.5
+pydantic_core==2.41.5
+SQLAlchemy==2.0.45
+uvicorn==0.40.0
