@@ -24,9 +24,8 @@ class GuiaResponse(GuiaBase):
     ativo: bool
 
     class Config:
-        from_attributes = True # Isso permite que o Pydantic leia dados do SQLAlchemy
+        from_attributes = True 
 
-# Schema simples só para mostrar o nome/telefone do guia dentro da visita
 class GuiaResumido(BaseModel):
     nome: str
     telefone: str
