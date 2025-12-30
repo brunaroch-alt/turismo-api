@@ -1,32 +1,28 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
 
-"""
-Base - Infos base da classe
-
-Create - Usada para receber os dados de criação/edição
-
-Response - Usada para devolver os dados; Resposta.
-"""
-# ----------> guia
+# ----------> GUIA
 
 class GuiaBase(BaseModel):
-    nome: str
-    telefone: str
+    # Field ajuda a colocar exemplos reais no Swagger para facilitar o teste
+    nome: str = Field(..., example="Macinho", description="Nome completo do guia")
+    telefone: str = Field(..., example="11988887777", description="Telefone de contato com DDD")
 
 class GuiaCreate(GuiaBase):
-    ativo: bool = True
-    pass
+    # Por padrão, todo guia novo já nasce ativo
+    ativo: bool = Field(True, description="Define se o guia pode ser vinculado a novas visitas")
 
 class GuiaResponse(GuiaBase):
     id: int
     ativo: bool
 
     class Config:
-        from_attributes = True 
+        # Faz o Pydantic entender os objetos do banco de dados, no caso, SQLAlchemy
+        from_attributes = True
 
 class GuiaResumido(BaseModel):
+    # Usei esse esquema mais simples para mostrar só o básico do guia dentro da visita
     nome: str
     telefone: str
 
@@ -34,20 +30,22 @@ class GuiaResumido(BaseModel):
         from_attributes = True
 
 
-# ----------> visita
+# ----------> VISITA
 
 class ItemVenda(BaseModel):
-    produto_id: int
-    quantidade: int
-    preco_na_hora: Optional[float] = None
+    produto_id: int = Field(..., example=1)
+    # gt=0 garante que ninguém tente vender quantidade negativa ou zero
+    quantidade: int = Field(..., example=2, gt=0, description="Quantidade deve ser maior que zero")
+    # Esse campo o usuário não preenche no POST, o Service vai calcular sozinho
+    preco_na_hora: Optional[float] = Field(None, description="Preço unitário registrado no momento da venda")
     
     class Config:
         from_attributes = True
 
 class VisitaBase(BaseModel):
-    guia_id: int
-    qtd_turistas: int
-    valor_taxa_guia: float
+    guia_id: int = Field(..., example=1)
+    qtd_turistas: int = Field(..., example=5, description="Número de pessoas no grupo")
+    valor_taxa_guia: float = Field(..., example=50.0, description="Valor cobrado pela condução do grupo")
     itens: List[ItemVenda]
 
 class VisitaCreate(VisitaBase):
@@ -58,22 +56,24 @@ class VisitaResponse(BaseModel):
     data_visita: datetime
     qtd_turistas: int
     total_produtos: float
+    # Esse total é a soma da taxa do guia + o total dos produtos vendidos
+    # Lembrando que ela não vai ser definida no models e sim no service
     total_arrecadado: float 
-    guia: Optional[GuiaResumido] 
+    guia: Optional[GuiaResumido]
     itens: List[ItemVenda] = []
 
     class Config:
         from_attributes = True
 
-# ----------> produto
+
+# ----------> PRODUTO
 
 class ProdutoBase(BaseModel):
-    nome: str
-    preco: float
-    categoria: str 
+    nome: str = Field(..., example="Água Mineral 500ml")
+    preco: float = Field(..., example=5.0)
+    categoria: str = Field(..., example="Bebidas")
 
 class ProdutoCreate(ProdutoBase):
-    ativo: bool = True
     pass
 
 class ProdutoResponse(ProdutoBase):
@@ -84,6 +84,7 @@ class ProdutoResponse(ProdutoBase):
         from_attributes = True
 
 class ProdutoStatus(BaseModel):
+    # Esse esquema é especial para o ranking de produtos mais vendidos
     id: int
     ativo: bool
     nome: str
@@ -95,10 +96,12 @@ class ProdutoStatus(BaseModel):
     class Config:
         from_attributes = True
 
-# ----------> relatório
+
+# ----------> RELATÓRIO
 
 class RelatorioGeral(BaseModel):
-    total_taxas_guias: float
-    total_produtos: float 
-    faturamento_total_geral: float
-    quantidade_visitas: int
+    # Campos que resumem a saúde financeira da 'empresa' no período selecionado
+    total_taxas_guias: float = Field(..., description="Soma de todas as taxas de guias no período")
+    total_produtos: float = Field(..., description="Soma de todas as vendas de produtos no período")
+    faturamento_total_geral: float = Field(..., description="Soma total arrecadada (Taxas + Produtos)")
+    quantidade_visitas: int = Field(..., description="Total de registros de visitas processados")
