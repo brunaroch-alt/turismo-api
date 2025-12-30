@@ -12,6 +12,7 @@ O projeto simula um cenário real de um ponto turístico, onde cada visita pode 
 * Cadastro, listagem, atualização e desativação de produtos
 * Registro de visitas turísticas
 * Associação de produtos vendidos a cada visita
+* Histórico de Preços: O sistema grava o preço do produto no exato momento da venda (preco_na_hora), garantindo que relatórios financeiros antigos não sejam alterados caso o preço do produto mude hoje.
 * Cálculo automático de:
 
   * Total de produtos vendidos por visita
